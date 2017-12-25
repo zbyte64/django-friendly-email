@@ -1,0 +1,11 @@
+/include
+/lib
+/bin
+/man
+*.swp
+*.py[cdo]
+*.env
+__pycache__
+.cache
+pip-selfcheck.json
+*.egg-info
