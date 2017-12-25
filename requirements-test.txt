@@ -8,6 +8,7 @@ django-anymail
 mock>=1.0.1
 nose>=1.3.0
 django-nose>=1.2
+html2text
 flake8>=2.1.0
 tox>=1.7.0
 

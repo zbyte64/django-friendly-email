@@ -1,9 +1,8 @@
 from django.apps import AppConfig
 from django.conf import settings
-from django.core.mail.message import EmailMessage, EmailMultiAlternatives
+from django.core.mail import get_connection
 
-from .message import FriendlyEmail
-from .converters import CONVERTER
+from .message import patch_message
 
 
 class FriendlyEmailConfig(AppConfig):
@@ -11,22 +10,22 @@ class FriendlyEmailConfig(AppConfig):
     verbose_name = "Friendly Email"
 
     def ready(self):
-        if getattr(settings, 'FRIENDLY_EMAIL_MONKEY_PATCH', False):
-            if 'anymail' in settings.INSTALLED_APPS:
-                from anymail.signals import pre_send
-                pre_send.connect(patch_anymail_signal)
-            else:
-                pass #TODO monkey patch django
+        do_patch = getattr(settings, 'FRIENDLY_EMAIL_MONKEY_PATCH', False)
+        if do_patch == 'anymail':
+            from anymail.signals import pre_send
+            pre_send.connect(patch_anymail_signal)
+        elif do_patch:
+            connection_klass = type(get_connection(fail_silently=True))
+            connection_klass.send_messages = patch_send_messages(connection_klass.send_messages)
 
 
-def patch_anymail_signal(message, esp_name, **kwargs):
-    if isinstance(message, FriendlyEmail):
-        return
-    if isinstance(message, EmailMultiAlternatives):
-        if message.alternatives:
-            #alternatives already defined
-            return
-        message.attach_alternative(CONVERTER(message.body), 'text/plain')
-        return
-    if isinstance(message, EmailMessage):
-        pass #can we upcast?
+def patch_anymail_signal(message, **kwargs):
+    patch_message(message)
+
+
+def patch_send_messages(send_messages_fn):
+    def send_messages(connection, messages):
+        for message in messages:
+            patch_messsage(message)
+        return send_messages_fn(connection, messages)
+    return send_messages

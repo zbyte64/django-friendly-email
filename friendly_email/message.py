@@ -1,4 +1,4 @@
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from .converters import CONVERTER
 
@@ -22,3 +22,16 @@ class FriendlyEmail(EmailMultiAlternatives):
         if not self.has_text_alternative():
             self.attach_alternative(self.generate_text_alternative(), 'text/plain')
         return super(FriendlyEmail, self).send(fail_silently)
+
+
+def patch_message(message):
+    if isinstance(message, FriendlyEmail):
+        return
+    if isinstance(message, EmailMultiAlternatives):
+        if message.alternatives:
+            #alternatives already defined
+            return
+        message.attach_alternative(CONVERTER(message.body), 'text/plain')
+        return
+    if isinstance(message, EmailMessage):
+        pass #can we upcast?
