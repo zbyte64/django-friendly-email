@@ -1,4 +1,4 @@
-from django.utils import strip_tags
+from django.utils.html import strip_tags
 from django.conf import settings
 import importlib
 

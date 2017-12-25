@@ -10,7 +10,7 @@ README = io.open(os.path.join(here, 'README.rst'), encoding="utf8").read()
 
 version = '0.0.1'
 author = 'zbyte64'
-description = "Intelligently send HTML emails in Django by generating and sending a text alternative email"
+description = "Intelligently send HTML emails in Django by generating and attaching a text alternative email"
 install_requires = ['django', 'six']
 
 setup(name='django-fiendly-email',

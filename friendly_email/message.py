@@ -1,6 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 
-from .message import CONVERTER
+from .converters import CONVERTER
 
 
 class FriendlyEmail(EmailMultiAlternatives):

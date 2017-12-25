@@ -1,8 +1,9 @@
 from django.apps import AppConfig
 from django.conf import settings
-from django.mail.message import EmailMessage, EmailMultiAlternatives
+from django.core.mail.message import EmailMessage, EmailMultiAlternatives
 
-from .message import FriendlyEmail, CONVERTER
+from .message import FriendlyEmail
+from .converters import CONVERTER
 
 
 class FriendlyEmailConfig(AppConfig):
@@ -18,7 +19,7 @@ class FriendlyEmailConfig(AppConfig):
                 pass #TODO monkey patch django
 
 
-def patch_anymail_signal(message, esp_name):
+def patch_anymail_signal(message, esp_name, **kwargs):
     if isinstance(message, FriendlyEmail):
         return
     if isinstance(message, EmailMultiAlternatives):
@@ -27,5 +28,5 @@ def patch_anymail_signal(message, esp_name):
             return
         message.attach_alternative(CONVERTER(message.body), 'text/plain')
         return
-    if isinstance(message, EmailMessage)
+    if isinstance(message, EmailMessage):
         pass #can we upcast?

@@ -18,8 +18,10 @@ try:
             'django.contrib.auth',
             'django.contrib.contenttypes',
             'django.contrib.sites',
+            'anymail',
             'friendly_email'
         ],
+        FRIENDLY_EMAIL_MONKEY_PATCH=True,
         SITE_ID=1,
         NOSE_ARGS=['-s'],
         TEMPLATES = [
