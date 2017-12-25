@@ -21,6 +21,7 @@ try:
             'anymail',
             'friendly_email'
         ],
+        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
         FRIENDLY_EMAIL_MONKEY_PATCH=True,
         SITE_ID=1,
         NOSE_ARGS=['-s'],
@@ -64,7 +65,7 @@ except ImportError:
 
 def run_tests(*test_args):
     if not test_args:
-        test_args = ['tests']
+        test_args = ['tests', 'friendly_email.tests']
 
     # Run tests
     test_runner = NoseTestSuiteRunner(verbosity=1)
