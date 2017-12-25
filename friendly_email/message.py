@@ -32,6 +32,7 @@ def patch_message(message):
             #alternatives already defined
             return
         message.attach_alternative(CONVERTER(message.body), 'text/plain')
+        message.content_subtype = 'html'
         return
     if isinstance(message, EmailMessage):
         pass #can we upcast?

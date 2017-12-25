@@ -26,6 +26,6 @@ def patch_anymail_signal(message, **kwargs):
 def patch_send_messages(send_messages_fn):
     def send_messages(connection, messages):
         for message in messages:
-            patch_messsage(message)
+            patch_message(message)
         return send_messages_fn(connection, messages)
     return send_messages
